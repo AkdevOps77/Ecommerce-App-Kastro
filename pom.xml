@@ -1,28 +1,66 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com</groupId>
   <artifactId>EcommerceApp</artifactId>
-  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+
   <name>EcommerceApp Maven Webapp</name>
   <url>http://maven.apache.org</url>
 
+  <!-- ===================== -->
+  <!-- Properties -->
+  <!-- ===================== -->
+  <properties>
+    <java.version>17</java.version>
+    <junit.version>5.10.0</junit.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+    <maven.war.plugin.version>3.3.1</maven.war.plugin.version>
+    <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
+    <jacoco.plugin.version>0.8.11</jacoco.plugin.version>
+  </properties>
+
+  <!-- ===================== -->
+  <!-- Dependency Management -->
+  <!-- ===================== -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- ===================== -->
+  <!-- Dependencies -->
+  <!-- ===================== -->
   <dependencies>
-    <!-- Updated JUnit to JUnit 5 -->
+
+    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.10.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- File upload -->
     <dependency>
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
@@ -35,6 +73,7 @@
       <version>2.11.0</version>
     </dependency>
 
+    <!-- Servlet API -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -42,6 +81,7 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Databases -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
@@ -54,13 +94,18 @@
       <version>3.42.0.0</version>
     </dependency>
 
+    <!-- ANTLR -->
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr4-runtime</artifactId>
       <version>4.10.1</version>
     </dependency>
+
   </dependencies>
 
+  <!-- ===================== -->
+  <!-- Nexus Deployment -->
+  <!-- ===================== -->
   <distributionManagement>
     <repository>
       <id>maven-releases</id>
@@ -72,66 +117,74 @@
     </snapshotRepository>
   </distributionManagement>
 
+  <!-- ===================== -->
+  <!-- Build -->
+  <!-- ===================== -->
   <build>
     <finalName>EcommerceApp</finalName>
 
     <plugins>
-      <!-- Maven Compiler Plugin -->
+
+      <!-- Compiler -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
-          <source>17</source>
-          <target>17</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
       </plugin>
 
-      <!-- Maven WAR Plugin -->
+      <!-- WAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>${maven.war.plugin.version}</version>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml> <!-- Add this if you don't have a web.xml -->
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
 
-      <!-- Maven Surefire Plugin (for JUnit 5) -->
+      <!-- Surefire (JUnit 5) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>${maven.surefire.plugin.version}</version>
         <configuration>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
+          <useModulePath>false</useModulePath>
         </configuration>
       </plugin>
 
-      <!-- Maven Deploy Plugin -->
+      <!-- JaCoCo (SonarQube coverage) -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Deploy -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>3.1.1</version>
       </plugin>
 
-      <!-- Maven Clean Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>3.3.1</version>
-      </plugin>
-
-      <!-- Maven Resources Plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
+
 </project>
