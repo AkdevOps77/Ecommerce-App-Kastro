@@ -70,7 +70,6 @@
         </dependency>
     </dependencies>
 
-    <!-- Nexus deployment -->
     <distributionManagement>
         <repository>
             <id>maven-releases</id>
